@@ -1,13 +1,11 @@
 package com.example.Toy_project.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +19,13 @@ public class User {
 
     @JsonManagedReference //순환참조 방지
     @OneToMany(mappedBy = "user")
-    private List<Plant> plants = new ArrayList<>();
+    private List<UserGroup> groups = new ArrayList<>();
+
+
+
 
     private String name;
     private String age;
-
-
+    private int coin;
+    private LocalTime time;
 }

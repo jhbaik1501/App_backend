@@ -4,9 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class PlantForm {
+public class GroupForm {
 
-    private Long id;
-    private String species;
+    private Long group_id;
+    private String groupname;
+    private String password;
     private Long user_id;
 }

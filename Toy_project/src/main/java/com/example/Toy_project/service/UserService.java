@@ -1,13 +1,17 @@
 package com.example.Toy_project.service;
 
-import com.example.Toy_project.domain.Environment;
-import com.example.Toy_project.domain.Plant;
+
+import com.example.Toy_project.domain.TimeForm;
+import com.example.Toy_project.domain.TimeFormContainName;
 import com.example.Toy_project.domain.User;
+import com.example.Toy_project.domain.UserGroup;
 import com.example.Toy_project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -27,12 +31,39 @@ public class UserService {
     }
 
     @Transactional
-    public List<Plant> findAllPlantByUser(Long id){
-        return userRepository.findUserPlant(id);
+    public List<UserGroup> findAllGroupByUser(Long id){
+        return userRepository.findUserGroup(id);
     }
 
     @Transactional
     public void join(User user) {
         userRepository.save(user);
+    }
+
+    @Transactional
+    public int useCoin(Long userId, int coin) {
+        return userRepository.useCoin(userId, coin);
+    }
+
+    @Transactional
+    public void saveTime(Long id, LocalTime localTime) {
+        userRepository.saveTime(id, localTime);
+    }
+
+    @Transactional
+    @Scheduled(cron = "59 59 23 * * *")
+    public void ResetTime(){ // 23시 59분 59초되면 시간 reset시키고, 코인 값 증가.
+        List<User> allUser = findAllUser();
+        userRepository.TimeReset(allUser);
+    }
+
+    @Transactional
+    public List<TimeFormContainName> findAllTimeList() {
+        return userRepository.findAllTime();
+    }
+
+    @Transactional
+    public List<TimeFormContainName> findAllTimeByUser(Long id) {
+        return userRepository.findAllTimeByGroup(id);
     }
 }
