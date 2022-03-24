@@ -5,6 +5,7 @@ import com.example.Toy_project.domain.TimeForm;
 import com.example.Toy_project.domain.TimeFormContainName;
 import com.example.Toy_project.domain.User;
 import com.example.Toy_project.domain.UserGroup;
+import com.example.Toy_project.repository.GroupRepository;
 import com.example.Toy_project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +20,7 @@ import java.util.List;
 public class UserService {
 
     final private UserRepository userRepository;
+    final private GroupRepository groupRepository;
 
     @Transactional
     public User findUser(Long id){
@@ -31,7 +33,7 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserGroup> findAllGroupByUser(Long id){
+    public UserGroup findAllGroupByUser(Long id){
         return userRepository.findUserGroup(id);
     }
 
@@ -65,5 +67,11 @@ public class UserService {
     @Transactional
     public List<TimeFormContainName> findAllTimeByUser(Long id) {
         return userRepository.findAllTimeByGroup(id);
+    }
+
+    @Transactional
+    public void setUserGroup(Long group_id, Long user_id) { // 유저의 그룹을 넣어주는 로직.
+        UserGroup group = groupRepository.findGroup(group_id);
+        userRepository.setUserGroup(group, user_id);
     }
 }

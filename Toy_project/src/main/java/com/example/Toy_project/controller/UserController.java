@@ -27,45 +27,55 @@ public class UserController {
 
 
     @PostMapping("/api/createGroup")
-    public String createGroup(@RequestBody GroupForm groupForm){
+    @Transactional
+    public UserGroup createGroup(@RequestBody GroupForm groupForm) {
 
         UserGroup usergroup = new UserGroup();
         System.out.println("그룹 폼 id : " + groupForm.getUser_id());
 
-        usergroup.setUser(userService.findUser(groupForm.getUser_id()));
-
         usergroup.setName(groupForm.getGroupname());
         usergroup.setPassword(groupForm.getPassword());
+        groupService.save(usergroup);
+        userService.setUserGroup(usergroup.getId(), groupForm.getUser_id());
 
-        boolean b = groupService.save(usergroup);
-        if(b){
-            return "그룹 등록 완료!";
-        }
-        else{
-            return "그룹은 최대 2개만 등록 가능합니다.";
-        }
+        return usergroup;
     }
-
 
     @PostMapping("/api/joinGroup")
     public String joinGroup(@RequestBody GroupForm groupForm){
 
-        UserGroup usergroup = new UserGroup();
-        System.out.println("가입할 그룹 id : " + groupForm.getUser_id());
+        System.out.println("가입할 그룹 id : " + groupForm.getGroup_id() );
 
-        usergroup.setUser(userService.findUser(groupForm.getUser_id()));
+        UserGroup userGroup = groupService.findOneById(groupForm.getGroup_id());
 
-        usergroup.setName(groupForm.getGroupname());
-        usergroup.setPassword(groupForm.getPassword());
+        if(userGroup == null){
+            String str = " \"fail\" : \"id\" ";
+            return "{" + str + "}";
+        } else {
 
-        boolean b = groupService.save(usergroup);
-        if(b){
-            return "그룹 등록 완료!";
-        }
-        else{
-            return "그룹은 최대 2개만 등록 가능합니다.";
+            boolean b = groupService.checkPassword(groupForm.getGroup_id(), groupForm.getPassword());
+            if(b){
+                userService.setUserGroup(groupForm.getGroup_id(), groupForm.getUser_id());
+                String str = " \"fail\" : \"success\" ";
+                return "{" + str + "}";
+            }
+            else{
+                String str = " \"fail\" : \"password\" ";
+                return "{" + str + "}";
+            }
         }
     }
+
+    @GetMapping("/api/UserGroup")
+    public UserGroup getUserGroup (@RequestParam("id") Long id){ // 유저의 아이디를 넣으면, 속한 그룹을 반환.
+        return userService.findAllGroupByUser(id);
+    }
+
+    @GetMapping("/api/UserGroupTime")
+    public List<TimeFormContainName> getTimeGroup (@RequestParam("id") Long groupId){
+        return userService.findAllTimeByUser(groupId);
+    }
+
 
 
 
@@ -99,17 +109,6 @@ public class UserController {
     @GetMapping("/api/UserList")
     public List<User> getUserList(){
         return userService.findAllUser();
-    }
-
-
-    @GetMapping("/api/UserGroup")
-    public List<UserGroup> getUserGroup (@RequestParam("id") Long id){
-        return userService.findAllGroupByUser(id);
-    }
-
-    @GetMapping("/api/UserGroupTime")
-    public List<TimeFormContainName> getTimeGroup (@RequestParam("id") Long groupId){
-        return userService.findAllTimeByUser(groupId);
     }
 
 

@@ -10,4 +10,5 @@ public class GroupForm {
     private String groupname;
     private String password;
     private Long user_id;
+
 }

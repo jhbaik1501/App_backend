@@ -17,27 +17,17 @@ public class GroupService {
     final private UserRepository userRepository;
 
     @Transactional
-    public boolean save(UserGroup group){
-
-        System.out.println(group.getId() + group.getUser().getName() );
-        Long userId = group.getUser().getId();
-        if(checkGroupNum(userId)){
-            groupRepository.save(group);
-            return true;
-        }
-        else{
-            return false; // 그룹 개수가 2개 이상이므로 false 반환
-        }
+    public void save(UserGroup group){
+        groupRepository.save(group);
     }
 
-    public boolean checkGroupNum(Long userId){
-
-        if(userRepository.findUserGroup(userId).size() >= 2){
-            return false;
-        }
-        return true;
+    @Transactional
+    public UserGroup findOneById(Long groupId){
+        return groupRepository.findGroup(groupId);
     }
 
-
-
+    @Transactional
+    public boolean checkPassword(Long group_id, String password) {
+        return groupRepository.checkPassword(group_id, password);
+    }
 }

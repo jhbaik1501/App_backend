@@ -17,11 +17,9 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @JsonManagedReference //순환참조 방지
-    @OneToMany(mappedBy = "user")
-    private List<UserGroup> groups = new ArrayList<>();
-
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "group_id")
+    private UserGroup userGroup;
 
 
     private String name;

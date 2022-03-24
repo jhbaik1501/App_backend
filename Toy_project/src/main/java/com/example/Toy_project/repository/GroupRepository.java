@@ -17,4 +17,17 @@ public class GroupRepository {
         em.persist(group);
     }
 
+    public UserGroup findGroup(Long groupId){
+        return em.find(UserGroup.class, groupId);
+    }
+
+    public boolean checkPassword(Long group_id, String password) {
+        UserGroup group = em.find(UserGroup.class, group_id);
+        if ( group.getPassword().equals(password) ) { // 패스워드가 같다면
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

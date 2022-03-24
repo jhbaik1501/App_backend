@@ -32,11 +32,10 @@ public class UserRepository {
         return list;
     }
 
-    public List<UserGroup> findUserGroup(Long id){ // 그룹의 모든 정보 찾기
-        List<UserGroup> list = em.createQuery("SELECT P FROM UserGroup P JOIN P.user U WHERE U.id = :id", UserGroup.class)
-                .setParameter("id", id)
-                .getResultList();
-        return list;
+    public UserGroup findUserGroup(Long id){ // 유저의 그룹 정보 가져오기.
+
+        User user = em.find(User.class, id);
+        return user.getUserGroup();
     }
 
 
@@ -74,19 +73,19 @@ public class UserRepository {
         return list;
     }
 
-    public List<TimeFormContainName> findAllTimeByGroup(Long id) {
-        List<User> users = em.createQuery("SELECT U FROM UserGroup P JOIN P.user U WHERE U.id = :id ORDER BY U.time desc")
-                .setParameter("id", id)
+    public List<TimeFormContainName> findAllTimeByGroup(Long groupid) { // 그룹 아이디를 받으면 그 그룹의 시간과 유저들의 이름을 반환.
+
+        System.out.println("GROUP ID : " + groupid);
+
+        List<TimeFormContainName> list = em.createQuery("SELECT U.name, U.time FROM User U JOIN U.userGroup g where g.id = :id")
+                .setParameter("id", groupid)
                 .getResultList();
-        List<TimeFormContainName> list = new ArrayList<TimeFormContainName>();
-        for(User user : users){
-            TimeFormContainName temp = new TimeFormContainName();
-            temp.setName(user.getName());
-            temp.setLocalTime(user.getTime());
-            list.add(temp);
-            System.out.println("TEMP -> " + temp.getName() + ", " + temp.getLocalTime());
-        }
 
         return list;
+    }
+
+    public void setUserGroup(UserGroup group, Long user_id) { // 유저의 그룹을 지정.
+        User user = findOne(user_id);
+        user.setUserGroup(group);
     }
 }
