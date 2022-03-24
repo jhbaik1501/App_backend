@@ -1,4 +1,5 @@
-## 여기에 프로젝트 정보
-- Spring - react - mysql 연결 완료
-- 간단하게 mysql에서 (local) 데이터 빼내서 -> spring 컨트롤러를 통해서 -> react에 전달하는 예시를 넣어보았음
-- https://baik-learn.tistory.com/39
+## 프로젝트 정보
+- Spring을 사용한 백엔드 구성.
+- MySQL을 사용하였고, Hibernate와 JPA를 사용하여 데이터를 조작하였음.
+- Spring boot 프레임워크를 활용하여, 23시 59분 59초가 되면, 시간을 초기화 한다던지, 의존성 관리도 편하게 할 수 있도록 하였음.
+- RestAPI를 사용하여 안드로이드 프레임워크와 통신하는 방식으로 구성하였음.
